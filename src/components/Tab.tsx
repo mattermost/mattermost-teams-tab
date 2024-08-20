@@ -10,11 +10,13 @@ import config from "./sample/lib/config";
 import "./Tab.css";
 import RunsSidebar from "./Sidebar/Sidebar";
 import { makeStyles, shorthands } from "@fluentui/react-components";
+import IncidentDetails from "./IncidentDetails/IncidentDetails";
 
 const useClasses = makeStyles({
   container: {
     height: '100%',
     display: 'flex',
+    alignItems: 'flex-start',
   },
 });
 
@@ -50,7 +52,7 @@ export default function Tab() {
     >
       <div className={classes.container}>
         <RunsSidebar />
-
+        <IncidentDetails />
       </div>
 
     </div>
