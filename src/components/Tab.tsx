@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { TeamsFxContext } from "./Context";
-import {Client4} from '@mattermost/client';
+import { Client4 } from '@mattermost/client';
 
 import {
   Label,
@@ -8,10 +8,20 @@ import {
 } from "@fluentui/react-components";
 import config from "./sample/lib/config";
 import "./Tab.css";
+import RunsSidebar from "./Sidebar/Sidebar";
+import { makeStyles, shorthands } from "@fluentui/react-components";
+
+const useClasses = makeStyles({
+  container: {
+    height: '100%',
+    display: 'flex',
+  },
+});
 
 const showFunction = Boolean(config.apiName);
 
 export default function Tab() {
+  const classes = useClasses();
   const { themeString } = useContext(TeamsFxContext);
   const inputId = useId("input");
   const [runs, setRuns] = useState([]);
@@ -19,7 +29,7 @@ export default function Tab() {
   const getPlaybooks = async () => {
     const client = new Client4();
     client.setUrl('http://localhost:8065');
-    client.setToken('paste token for dev here');
+    client.setToken('3rnukiofwpd3iyyguh7y9k6z8a');
 
     try {
       const res = await fetch(`${client.getUrl()}/plugins/playbooks/api/v0/runs`, client.getOptions({}));
@@ -38,23 +48,11 @@ export default function Tab() {
     <div
       className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}
     >
-      <div className="tab page">
-      <div className="narrow page-padding">
-        <h1 className="center">Mattermost Playbook Runs</h1>
-        <div className="tabList">
-          {
-            runs.map((r) => (
-              <div className='runRow'>
-                <Label className='runField'>Run:</Label>
-                <Label>{r.name}</Label>
-                <Label className='runField'>Status:</Label>
-                <Label>{r.current_status}</Label>
-              </div>
-            ))
-          }
-        </div>
+      <div className={classes.container}>
+        <RunsSidebar />
+
       </div>
-      </div>
+
     </div>
   );
 }
