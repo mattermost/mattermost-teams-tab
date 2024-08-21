@@ -25,15 +25,7 @@
   "accentColor": "#FFFFFF",
   "bots": [],
   "composeExtensions": [],
-  "configurableTabs": [
-    {
-      "configurationUrl": "${{TAB_ENDPOINT}}/configuration.html",
-      "scopes": [
-        "team"
-      ],
-      "canUpdateConfiguration": true
-    }
-  ],
+  "configurableTabs": [],
   "staticTabs": [
     {
       "entityId": "index",
