@@ -79,7 +79,13 @@
     const mmURL = localStorage.getItem("mmcloudurl");
     if (mmURL) {
       if (verifyURL(mmURL)) {
-        window.location.href = mmURL;
+        // Strip any trailing slashes
+        mmURL = mmURL.replace(/\/+$/, "");
+
+        // TODO: Check if the configured URL is "valid", somehow.
+
+        // Redirect to the playbooks plugin on the configured URL.
+        window.location.href = mmURL + '/plugins/playbooks/public/teams-tab-app/main.html';
       } else {
         localStorage.removeItem("mmcloudurl");
         setErrorText("");
