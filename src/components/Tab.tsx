@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { TeamsFxContext } from "./Context";
-import {Client4} from '@mattermost/client';
+import { Client4 } from '@mattermost/client';
 
 import {
   Label,
@@ -39,21 +39,21 @@ export default function Tab() {
       className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}
     >
       <div className="tab page">
-      <div className="narrow page-padding">
-        <h1 className="center">Mattermost Playbook Runs</h1>
-        <div className="tabList">
-          {
-            runs.map((r) => (
-              <div className='runRow'>
-                <Label className='runField'>Run:</Label>
-                <Label>{r.name}</Label>
-                <Label className='runField'>Status:</Label>
-                <Label>{r.current_status}</Label>
-              </div>
-            ))
-          }
+        <div className="narrow page-padding">
+          <h1 className="center">Mattermost Playbook Runs</h1>
+          <div className="tabList">
+            {
+              runs.map((r) => (
+                <div className='runRow'>
+                  <Label className='runField'>Run:</Label>
+                  <Label>NONE</Label>
+                  <Label className='runField'>Status:</Label>
+                  <Label>NONE</Label>
+                </div>
+              ))
+            }
+          </div>
         </div>
-      </div>
       </div>
     </div>
   );
