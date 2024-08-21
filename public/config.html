@@ -4,6 +4,73 @@
   <title>Config</title>
   <meta charset="utf-8" />
   <link rel="stylesheet" href="/teamstyle.css">
+  <script src="https://res.cdn.office.net/teams-js/2.22.0/js/MicrosoftTeams.min.js"
+    integrity="sha384-WSG/sWulIv7rel5TnFlH8JTpxl2OxzZh9Lux2mIzBFiTRLFvMBeFv9VURu/3vQdx"
+    crossorigin="anonymous"></script>
+  <script type="text/javascript">
+    const setErrorText = (text) => {
+      document.getElementById('errorText').innerText = text;
+    }
+
+    const verifyURL = (url) => {
+      if (!url.startsWith("https://")) {
+        setErrorText("URL must start with 'https://`");
+        return false;
+      }
+
+      if (!url.endsWith(".mattermost.com") && !url.endsWith(".test.mattermost.cloud")) {
+        setErrorText("URL must end with '.mattermost.com'");
+        return false;
+      }
+
+      return true;
+    }
+
+    const mmURL = localStorage.getItem("mmcloudurl");
+    if (mmURL) {
+      if (verifyURL(mmURL)) {
+        // TODO: Check if the configured URL is "valid", somehow.
+
+        // Redirect to the playbooks plugin on the configured URL.
+        window.location.href = mmURL.replace(/\/+$/, "") + '/plugins/playbooks/public/teams-tab-app/main.html';
+      } else {
+        localStorage.removeItem("mmcloudurl");
+        setErrorText("");
+      }
+    }
+
+    const saveURL = () => {
+      setErrorText("");
+
+      let url = document.getElementById('urlInput').value
+
+      // Strip any trailing slashes
+      url = url.replace(/\/+$/, "");
+
+      if (!verifyURL(url)) {
+        return;
+      }
+
+      localStorage.setItem("mmcloudurl", url);
+      window.location.href = url.replace(/\/+$/, "") + '/plugins/playbooks/public/teams-tab-app/main.html';
+    }
+
+    setTheme = (theme) => {
+      const el = document.documentElement;
+      el.setAttribute('data-theme', theme);
+    };
+
+    (async () => {
+      await microsoftTeams.app.initialize();
+      const context = await microsoftTeams.app.getContext();
+      setTheme(context.app.theme);
+
+      // When the theme changes, update the CSS again
+      microsoftTeams.registerOnThemeChangeHandler((theme) => {
+        setTheme(theme);
+      });
+    })();
+  </script>
 </head>
 
 <body>
@@ -54,74 +121,6 @@
       <p>Want to connect to self-managed Mattermost? Learn how <a href="#">here</a></p>
     </div>
   </div>
-  <script src="https://res.cdn.office.net/teams-js/2.22.0/js/MicrosoftTeams.min.js"
-    integrity="sha384-WSG/sWulIv7rel5TnFlH8JTpxl2OxzZh9Lux2mIzBFiTRLFvMBeFv9VURu/3vQdx"
-    crossorigin="anonymous"></script>
-  <script type="text/javascript">
-    const setErrorText = (text) => {
-      document.getElementById('errorText').innerText = text;
-    }
-
-    const verifyURL = (url) => {
-      if (!url.startsWith("https://")) {
-        setErrorText("URL must start with 'https://`");
-        return false;
-      }
-
-      if (!url.endsWith(".mattermost.com") && !url.endsWith(".test.mattermost.cloud")) {
-        setErrorText("URL must end with '.mattermost.com'");
-        return false;
-      }
-
-      return true;
-    }
-
-    const mmURL = localStorage.getItem("mmcloudurl");
-    if (mmURL) {
-      if (verifyURL(mmURL)) {
-        // Strip any trailing slashes
-        mmURL = mmURL.replace(/\/+$/, "");
-
-        // TODO: Check if the configured URL is "valid", somehow.
-
-        // Redirect to the playbooks plugin on the configured URL.
-        window.location.href = mmURL + '/plugins/playbooks/public/teams-tab-app/main.html';
-      } else {
-        localStorage.removeItem("mmcloudurl");
-        setErrorText("");
-      }
-    }
-
-    const saveURL = () => {
-      setErrorText("");
-
-      const url = document.getElementById('urlInput').value;
-
-      if (!verifyURL(url)) {
-        return;
-      }
-
-      localStorage.setItem("mmcloudurl", url);
-      window.location.href = url;
-    }
-
-    setTheme = (theme) => {
-      const el = document.documentElement;
-      el.setAttribute('data-theme', theme);
-    };
-
-    (async () => {
-      await microsoftTeams.app.initialize();
-      const context = await microsoftTeams.app.getContext();
-      setTheme(context.app.theme);
-
-      // When the theme changes, update the CSS again
-      microsoftTeams.registerOnThemeChangeHandler((theme) => {
-        setTheme(theme);
-      });
-    })();
-
-  </script>
 </body>
 
 </html>
