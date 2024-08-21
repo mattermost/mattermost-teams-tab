@@ -30,8 +30,8 @@
     {
       "entityId": "index",
       "name": "Personal Tab",
-      "contentUrl": "https://msteams-sync-test.test.mattermost.cloud/plugins/playbooks/public/teams-tab-app/main.html",
-      "websiteUrl": "https://msteams-sync-test.test.mattermost.cloud/plugins/playbooks/public/teams-tab-app/main.html",
+      "contentUrl": "${{TAB_DOMAIN}}/config.html",
+      "contentUrl": "${{TAB_DOMAIN}}/config.html",
       "scopes": [
         "personal"
       ]
