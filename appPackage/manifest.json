@@ -30,7 +30,7 @@
     {
       "entityId": "index",
       "name": "Personal Tab",
-      "contentUrl": "${{TAB_ENDPOINT}}/config.html",
+      "websiteUrl": "${{TAB_ENDPOINT}}/config.html",
       "contentUrl": "${{TAB_ENDPOINT}}/config.html",
       "scopes": [
         "personal"
