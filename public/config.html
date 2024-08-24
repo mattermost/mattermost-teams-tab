@@ -32,7 +32,7 @@
         // TODO: Check if the configured URL is "valid", somehow.
 
         // Redirect to the playbooks plugin on the configured URL.
-        window.location.href = mmURL.replace(/\/+$/, "") + '/plugins/playbooks/public/teams-tab-app/main.html';
+        // window.location.href = mmURL.replace(/\/+$/, "") + '/plugins/playbooks/public/teams-tab-app/main.html';
       } else {
         localStorage.removeItem("mmcloudurl");
         setErrorText("");
@@ -60,6 +60,38 @@
       el.setAttribute('data-theme', theme);
     };
 
+    validateToken = async (basePath, token) => {
+      const pluginId = 'playbooks';
+      const apiUrl = `${basePath}/plugins/${pluginId}`;
+
+      const response = await fetch(`${apiUrl}/tabapp/validate_token`, {
+        method: 'POST',
+        headers: {
+          "Authorization": token,
+        },
+      });
+      const contentType = response.headers.get('content-type');
+
+      if (response.ok) {
+        if (contentType !== 'application/json') {
+          throw new Error('unexpected contentType: ' + contentType)
+        }
+
+        return await response.json();
+      }
+
+      let error;
+      if (contentType === 'application/json') {
+        let data;
+        data = await response.json();
+        error = data?.error;
+      } else {
+        error = await response.text();
+      }
+
+      throw new Error(error)
+    }
+
     (async () => {
       await microsoftTeams.app.initialize();
       const context = await microsoftTeams.app.getContext();
@@ -69,6 +101,17 @@
       microsoftTeams.registerOnThemeChangeHandler((theme) => {
         setTheme(theme);
       });
+
+
+      const mmURL = localStorage.getItem("mmcloudurl");
+      if (mmURL) {
+        if (verifyURL(mmURL)) {
+          const token = await microsoftTeams.authentication.getAuthToken()
+          console.log(token);
+
+          console.log('result of validating token', await validateToken(mmURL, token));
+        }
+      }
     })();
   </script>
 </head>
