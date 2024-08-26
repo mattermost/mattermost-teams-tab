@@ -10,8 +10,6 @@ import {
   Badge,
   AvatarGroupPopover,
   partitionAvatarGroupItems,
-  Field,
-  ProgressBar,
   Card, CardHeader, CardProps,
 } from '@fluentui/react-components';
 
@@ -161,10 +159,6 @@ export const RunCard: React.FC<RunCardProps> = ({ status, value, name, active, .
       <footer className={mergeClasses(classes.flex, classes.cardFooter)}>
         {props.last_updated_at && <Caption1 className={classes.caption}>Last updated {DateTime.fromMillis(props.last_updated_at).toRelative()}</Caption1>}
       </footer>
-
-      <Field validationState='none'>
-        <ProgressBar value={value} />
-      </Field>
     </Card>
   );
 };
