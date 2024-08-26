@@ -7,6 +7,9 @@ module.exports = {
   entry: [
     './src/index.tsx',
   ],
+  devServer: {
+    static: './build',
+  },
   resolve: {
     modules: [
       'src',
