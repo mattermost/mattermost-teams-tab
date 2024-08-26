@@ -68,7 +68,9 @@ const colorMapping: { [key: string]: 'warning' | 'success' | 'brand' | 'danger' 
 export default function IncidentDetails(props: { run: PlaybookRun | undefined, users: Record<string, LimitedUser>, posts: Record<string, LimitedPost> }) {
   const classes = useClasses();
   const reader = new commonmark.Parser();
-  const writer = new commonmark.HtmlRenderer();
+  const writer = new commonmark.HtmlRenderer({
+    safe: true,
+  });
 
   let badgeColor = colorMapping['subtle'];
   if (props.run?.current_status === PlaybookRunStatus.InProgress) {
