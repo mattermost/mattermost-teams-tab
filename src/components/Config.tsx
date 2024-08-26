@@ -5,9 +5,6 @@ import {
 } from "@fluentui/react-components";
 import { app, pages } from "@microsoft/teams-js";
 import { TeamsFxContext } from "./Context";
-import config from "./sample/lib/config";
-
-const showFunction = Boolean(config.apiName);
 
 export default function Config() {
   const { themeString } = useContext(TeamsFxContext);
@@ -17,13 +14,13 @@ export default function Config() {
     await app.initialize();
     pages.config.registerOnSaveHandler((saveEvent) => {
       const configPromise = pages.config.setConfig({
-          contentUrl: window.location.origin,
-          entityId: window.location.origin,
-          suggestedDisplayName: "Mattermost"
+        contentUrl: window.location.origin,
+        entityId: window.location.origin,
+        suggestedDisplayName: "Mattermost"
       });
       configPromise.
-          then(() => {saveEvent.notifySuccess()}).
-          catch(() => {saveEvent.notifyFailure("failure message")});
+        then(() => { saveEvent.notifySuccess() }).
+        catch(() => { saveEvent.notifyFailure("failure message") });
     });
   }
 

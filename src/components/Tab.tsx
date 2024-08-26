@@ -1,60 +1,97 @@
-import { useContext, useEffect, useState } from "react";
-import { TeamsFxContext } from "./Context";
-import {Client4} from '@mattermost/client';
+import { useContext, useEffect, useState } from 'react';
 
-import {
-  Label,
-  useId
-} from "@fluentui/react-components";
-import config from "./sample/lib/config";
-import "./Tab.css";
+import { FetchError, fetchPlaybookRuns } from '../client';
 
-const showFunction = Boolean(config.apiName);
+import { PlaybookRun, LimitedUser, LimitedPost } from '../types/playbook_run';
+
+import { TeamsFxContext } from './Context';
+
+import './Tab.css';
+import RunsSidebar from './Sidebar/Sidebar';
+
+import { makeStyles } from '@fluentui/react-components';
+
+import IncidentDetails from './IncidentDetails/IncidentDetails';
+
+import * as microsoftTeams from "@microsoft/teams-js";
+
+const useClasses = makeStyles({
+  container: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'flex-start',
+  },
+});
+
+async function getAuthToken(): Promise<string> {
+  try {
+    await microsoftTeams.app.initialize();
+    const token = await microsoftTeams.authentication.getAuthToken()
+
+    return token;
+  } catch (e) {
+    console.warn(`Error from Teams SDK, may be running outside of Teams`, e);
+
+    return '';
+  }
+}
 
 export default function Tab() {
+  const classes = useClasses();
   const { themeString } = useContext(TeamsFxContext);
-  const inputId = useId("input");
-  const [runs, setRuns] = useState([]);
+  const [runs, setRuns] = useState<PlaybookRun[]>([]);
+  const [users, setUsers] = useState<Record<string, LimitedUser>>({});
+  const [posts, setPosts] = useState<Record<string, LimitedPost>>({});
+  const [selectedRunId, setSelectedRunId] = useState<string>('');
 
-  const getPlaybooks = async () => {
-    const client = new Client4();
-    client.setUrl('http://localhost:8065');
-    client.setToken('paste token for dev here');
+  const selectedRun = runs.find((run) => run.id == selectedRunId);
 
-    try {
-      const res = await fetch(`${client.getUrl()}/plugins/playbooks/api/v0/runs`, client.getOptions({}));
-      const runs = await res.json();
-      setRuns(runs.items);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const getPlaybookRuns = async () => {
+    const mmURL = localStorage.getItem("mmcloudurl");
+    if (mmURL) {
+      const token = await getAuthToken()
+
+      try {
+        const results = await fetchPlaybookRuns(mmURL, token);
+        setRuns(results.items);
+        setUsers(results.users);
+        setPosts(results.posts);
+        if (results.items.length > 0) {
+          setSelectedRunId(results.items[0].id);
+        }
+      } catch (e) {
+        if (e instanceof FetchError && e.status_code == 403) {
+          console.error('The Teams Tab App is not enabled for this Mattermost instance. Contact your system administrator.');
+        } else {
+          console.error('An error occurred loading the playbooks runs', e);
+        }
+      }
+    };
+  };
 
   useEffect(() => {
-    getPlaybooks();
+    getPlaybookRuns();
   }, []);
 
   return (
     <div
-      className={themeString === "default" ? "light" : themeString === "dark" ? "dark" : "contrast"}
+      style={{ height: '100%' }}
+      className={themeString === 'default' ? 'light' : themeString === 'dark' ? 'dark' : 'contrast'}
     >
-      <div className="tab page">
-      <div className="narrow page-padding">
-        <h1 className="center">Mattermost Playbook Runs</h1>
-        <div className="tabList">
-          {
-            runs.map((r) => (
-              <div className='runRow'>
-                <Label className='runField'>Run:</Label>
-                <Label>{r.name}</Label>
-                <Label className='runField'>Status:</Label>
-                <Label>{r.current_status}</Label>
-              </div>
-            ))
-          }
-        </div>
+      <div className={classes.container}>
+        <RunsSidebar
+          runs={runs}
+          users={users}
+          selectedRunId={selectedRunId}
+          setSelectedRunId={setSelectedRunId}
+        />
+        <IncidentDetails
+          run={selectedRun}
+          users={users}
+          posts={posts}
+        />
       </div>
-      </div>
+
     </div>
   );
 }
