@@ -23,6 +23,19 @@ const useClasses = makeStyles({
   },
 });
 
+async function getAuthToken(): Promise<string> {
+  try {
+    await microsoftTeams.app.initialize();
+    const token = await microsoftTeams.authentication.getAuthToken()
+
+    return token;
+  } catch (e) {
+    console.warn(`Error from Teams SDK, may be running outside of Teams`, e);
+
+    return '';
+  }
+}
+
 export default function Tab() {
   const classes = useClasses();
   const { themeString } = useContext(TeamsFxContext);
@@ -34,11 +47,9 @@ export default function Tab() {
   const selectedRun = runs.find((run) => run.id == selectedRunId);
 
   const getPlaybookRuns = async () => {
-    await microsoftTeams.app.initialize();
-
     const mmURL = localStorage.getItem("mmcloudurl");
     if (mmURL) {
-      const token = await microsoftTeams.authentication.getAuthToken()
+      const token = await getAuthToken()
 
       try {
         const results = await fetchPlaybookRuns(mmURL, token);
