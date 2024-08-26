@@ -1,7 +1,7 @@
 import { makeStyles, Avatar, Subtitle2, Badge, tokens, Text } from '@fluentui/react-components';
 
 import { DateTime } from 'luxon';
-import MarkdownView from 'react-showdown';
+import * as commonmark from '@mattermost/commonmark';
 
 import { PlaybookRun, PlaybookRunStatus, LimitedPost, LimitedUser } from '../../types/playbook_run';
 import { Status } from '../RunCard/Status';
@@ -67,6 +67,8 @@ const colorMapping: { [key: string]: 'warning' | 'success' | 'brand' | 'danger' 
 
 export default function IncidentDetails(props: { run: PlaybookRun | undefined, users: Record<string, LimitedUser>, posts: Record<string, LimitedPost> }) {
   const classes = useClasses();
+  const reader = new commonmark.Parser();
+  const writer = new commonmark.HtmlRenderer();
 
   let badgeColor = colorMapping['subtle'];
   if (props.run?.current_status === PlaybookRunStatus.InProgress) {
@@ -113,10 +115,7 @@ export default function IncidentDetails(props: { run: PlaybookRun | undefined, u
               className={classes.statusUpdate}
             >
               <Text>
-                <MarkdownView
-                  markdown={post.message}
-                  options={{ tables: true, emoji: true }}
-                />
+                <div dangerouslySetInnerHTML={{ __html: writer.render(reader.parse(post.message)) }} />
               </Text>
               <div className={classes.statusFooter}>
                 <Avatar
