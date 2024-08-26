@@ -41,8 +41,9 @@ module.exports = {
       hash: true,
     }),
   ],
+  devtool: 'inline-source-map',
   output: {
-    path: path.join(__dirname, '../public/teams-tab-app'),
+    path: path.join(__dirname, 'build'),
     publicPath: '/',
     filename: 'index.js',
   },
