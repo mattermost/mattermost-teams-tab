@@ -12,7 +12,7 @@ jobs:
       - name: ci/checkout-repo
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: ci/setup
-        uses: ./.github/actions/webapp-setup
+        uses: ./.github/actions/node-setup
       - name: ci/build
         run: |
           npm run build
