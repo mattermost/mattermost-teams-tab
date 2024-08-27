@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MattermostLogo from './mattermost_logo.svg';
+import { getAuthToken } from './auth';
+import { validateServerURL } from '../client';
 
 const styles = {
   container: {
@@ -26,6 +28,7 @@ const styles = {
     alignItems: 'center',
     gap: '8px',
     marginTop: '24px',
+    marginBottom: '16px',
   },
   urlInput: {
     marginBottom: 0,
@@ -43,6 +46,7 @@ const styles = {
 export default function Setup() {
   const [url, setURL] = useState('');
   const [errorText, setErrorText] = useState('');
+  const location = useLocation();
   const navigate = useNavigate();
 
   const cleanURL = (url: string | null) => {
@@ -62,43 +66,55 @@ export default function Setup() {
     }
   }, [])
 
+  // Set an error text if we failed from the Tab page.
   useEffect(() => {
-    if (!url.startsWith("https://")) {
-      setErrorText("URL must start with 'https://`");
+    if (location.state && location.state.failed) {
+      setURL(location.state.url);
+      setErrorText("Failed to connect to Mattermost server. Contact your system administrator.")
     }
-
-    if (!url.endsWith(".mattermost.com") && !url.endsWith(".test.mattermost.cloud")) {
-      setErrorText("URL must end with '.mattermost.com'");
-    }
-
-    setErrorText("")
-  }, [url])
+  }, [location.state])
 
   const saveURL = () => {
-    if (errorText !== "") {
-      return
+    const doSaveURL = async (url: string) => {
+      if (!url.startsWith("https://") && !url.startsWith("http://")) {
+        setErrorText("URL must start with 'https://`");
+        return
+      }
+
+      const token = await getAuthToken()
+      const valid = await validateServerURL(url, token)
+      if (!valid) {
+        setErrorText("This server does not appear to be configured for integration with MS Teams. Contact your system administrator.");
+        return
+      }
+
+      localStorage.setItem("mmcloudurl", url);
+      navigate('/tab');
     }
 
-    localStorage.setItem("mmcloudurl", cleanURL(url));
-    navigate('/tab');
-  }
+    doSaveURL(cleanURL(url))
+  };
 
   return (
     <div style={styles.container}>
-      <div style={styles.signupCard}>
+      <form style={styles.signupCard} onSubmit={saveURL}>
         <MattermostLogo />
         <h1 style={styles.connectToMattermost}>Connect to Mattermost</h1>
         <div style={styles.form}>
-          <label htmlFor="urlInput">Mattermost Cloud URL: </label>
+          <label htmlFor="urlInput">Mattermost URL:</label>
           <input id="urlInput" style={styles.urlInput} value={url} onChange={(event) => setURL(event.target.value)} />
-          <label id="errorText" className="error">{errorText}</label>
         </div>
         <div style={styles.saveContainer}>
           <button style={styles.saveButton} onClick={saveURL}>Save</button>
         </div>
-
-        <p>Want to connect to self-managed Mattermost? Learn how <a href="#">here</a></p>
-      </div>
+        {errorText.length > 0 &&
+          <label id="errorText" className="error">{errorText}</label>
+        }
+        <p>
+          Need help connecting to Mattermost? <br />
+          Learn more <a href="https://mattermost.com/pl/ms-teams-plugin-end-user-learn-more" target="_new">here</a>.
+        </p>
+      </form>
     </div>
   );
 }

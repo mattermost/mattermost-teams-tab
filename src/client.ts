@@ -11,6 +11,28 @@ export class FetchError extends Error {
   }
 }
 
+export const validateServerURL = async (mattermostServerURL: string, authToken: string) => {
+  try {
+    let response = await fetch(
+      `${mattermostServerURL}/plugins/playbooks/tabapp/runs`,
+      {
+        method: 'OPTIONS',
+        headers: {
+          "Authorization": authToken,
+        },
+      }
+    );
+
+    if (response.ok) {
+      return true
+    } else {
+      return false
+    }
+  } catch (e) {
+    console.warn("Validating Mattermost server failed", mattermostServerURL, e)
+  }
+}
+
 export const fetchPlaybookRuns = async (mattermostServerURL: string, authToken: string) => {
   let response = await fetch(
     `${mattermostServerURL}/plugins/playbooks/tabapp/runs?page=0&per_page=100`,
