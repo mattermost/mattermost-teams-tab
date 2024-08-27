@@ -8,6 +8,9 @@ appPackage/build
 .deployment
 .localConfigs
 
+# lint
+.eslintcache
+
 # dependencies
 /node_modules
 
