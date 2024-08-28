@@ -77,6 +77,10 @@ export default function RunsSidebar(props: { runs: PlaybookRun[], users: Record<
     navigate('/setup');
   }
 
+  const reload = () => {
+    navigate('/');
+  }
+
   return (
     <>
       {type == 'overlay' && (
@@ -128,6 +132,7 @@ export default function RunsSidebar(props: { runs: PlaybookRun[], users: Record<
           </DrawerBody>
 
           <DrawerFooter>
+            <a onClick={reload}>Reload</a>
             <a onClick={logout}>Logout</a>
           </DrawerFooter>
         </Drawer>
