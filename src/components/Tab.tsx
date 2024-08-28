@@ -13,6 +13,7 @@ import RunsSidebar from './Sidebar/Sidebar';
 import { makeStyles } from '@fluentui/react-components';
 
 import IncidentDetails from './IncidentDetails/IncidentDetails';
+import NoRuns from './NoRuns';
 import { getAuthToken } from './auth';
 
 const useClasses = makeStyles({
@@ -31,6 +32,7 @@ export default function Tab() {
   const [users, setUsers] = useState<Record<string, LimitedUser>>({});
   const [posts, setPosts] = useState<Record<string, LimitedPost>>({});
   const [selectedRunId, setSelectedRunId] = useState<string>('');
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const selectedRun = runs.find((run) => run.id == selectedRunId);
 
@@ -47,6 +49,8 @@ export default function Tab() {
         if (results.items.length > 0) {
           setSelectedRunId(results.items[0].id);
         }
+
+        setLoaded(true);
       } catch (e) {
         if (e instanceof FetchError && e.status_code == 403) {
           console.error('The Teams Tab App is not enabled for this Mattermost instance. Contact your system administrator.');
@@ -63,6 +67,10 @@ export default function Tab() {
   useEffect(() => {
     getPlaybookRuns();
   }, []);
+
+  if (loaded && runs.length === 0) {
+    return <NoRuns />
+  }
 
   return (
     <div
