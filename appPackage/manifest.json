@@ -1,43 +1,46 @@
 {
-  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.15/MicrosoftTeams.schema.json",
-  "manifestVersion": "1.15",
-  "version": "1.0.0",
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "version": "1.0.3",
+  "manifestVersion": "1.17",
   "id": "${{TEAMS_APP_ID}}",
+  "name": {
+    "short": "Mattermost Playbooks",
+    "full": ""
+  },
   "developer": {
-    "name": "Mattermost, Inc.",
+    "name": "Mattermost",
+    "mpnId": "",
     "websiteUrl": "${{TAB_ENDPOINT}}",
     "privacyUrl": "https://mattermost.com/privacy-policy/",
     "termsOfUseUrl": "https://mattermost.com/terms-of-use/"
   },
-  "icons": {
-    "color": "color.png",
-    "outline": "outline.png"
-  },
-  "name": {
-    "short": "Mattermost Playbooks for Teams",
-    "full": "Full name for Mattermost"
-  },
   "description": {
-    "short": "Give read-only access to select Playbook runs from Mattermost.",
-    "full": "Allow users of Microsoft Teams to consume status updates from ongoing incidents managed inside Mattermost."
+    "short": "Accelerate mission-critical work and incident response with Mattermost Playbooks",
+    "full": "Mattermost Playbooks for Teams improves cross-organizational alignment and awareness by enabling access to your active Mattermost Playbook incidents and status updates directly in Microsoft Teams.\n\nStakeholders working in Microsoft Teams now gain enhanced visibility into ongoing incidents, while incident responders working in Mattermost can stay focused and eliminate context switching. \n\nKey Features:\n- View active incidents, responders and last updated time\n- Read real-time incident status updates in chronological order\n\nYou must have an active Mattermost Enterprise self-managed or cloud  deployment to use this app. Learn more here: https://mattermost.com/pl/playbooks-for-microsoft-teams  \n\nAbout Mattermost: \nMattermost is a purpose-built platform for technical and operational teams working in organizations vital to national security, public safety and critical infrastructure. https://mattermost.com/  "
   },
-  "accentColor": "#1C58D9",
-  "bots": [],
-  "composeExtensions": [],
-  "configurableTabs": [],
+  "icons": {
+    "outline": "outline.png",
+    "color": "color.png"
+  },
+  "accentColor": "#1E325C",
   "staticTabs": [
     {
       "entityId": "index",
       "name": "Runs in Progress",
-      "websiteUrl": "${{TAB_ENDPOINT}}",
       "contentUrl": "${{TAB_ENDPOINT}}",
+      "scopes": [
+        "personal"
+      ],
+      "context": [
+        "personalTab"
+      ]
+    },
+    {
+      "entityId": "about",
       "scopes": [
         "personal"
       ]
     }
-  ],
-  "permissions": [
-    "identity"
   ],
   "validDomains": [
     "${{TAB_DOMAIN}}"
@@ -45,5 +48,7 @@
   "webApplicationInfo": {
     "id": "${{AAD_APP_CLIENT_ID}}",
     "resource": "api://${{TAB_DOMAIN}}/${{AAD_APP_CLIENT_ID}}"
-  }
+  },
+  "showLoadingIndicator": true,
+  "defaultGroupCapability": {}
 }

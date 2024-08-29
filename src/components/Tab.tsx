@@ -59,9 +59,13 @@ export default function Tab() {
         }
 
         localStorage.setItem("mmcloudurl", "")
+        console.log('Redirecting to /setup: failed to use saved URL')
         navigate('/setup', { state: { failed: true, url: mmURL } })
       }
-    };
+    } else {
+      console.log('Redirecting to /setup: no saved URL')
+      navigate('/setup');
+    }
   };
 
   useEffect(() => {

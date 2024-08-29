@@ -38,7 +38,7 @@ export default function NoRuns() {
     <h1>Don't see any runs?</h1>
     <p style={styles.p}>
       Add the <span style={styles.mention}>@msteams</span> bot as a participant to runs that should be visible from Microsoft Teams.<br />
-      Learn more <a href="https://mattermost.com/pl/ms-teams-plugin-end-user-learn-more" target="_new">here</a>.
+      Learn more <a href="https://mattermost.com/pl/playbooks-for-microsoft-teams" target="_new">here</a>.
     </p>
     <div>
       <Button appearance="primary" onClick={reload}>Reload</Button>

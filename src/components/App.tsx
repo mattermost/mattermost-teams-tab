@@ -1,4 +1,3 @@
-// https://fluentsite.z22.web.core.windows.net/quick-start
 import {
   FluentProvider,
   teamsLightTheme,
@@ -6,8 +5,10 @@ import {
   teamsHighContrastTheme,
   Spinner,
 } from '@fluentui/react-components';
+import { useEffect } from 'react';
 import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 import { useTeamsUserCredential } from '@microsoft/teamsfx-react';
+import { app } from "@microsoft/teams-js";
 
 import Privacy from './Privacy';
 import TermsOfUse from './TermsOfUse';
@@ -26,6 +27,19 @@ export default function App() {
     initiateLoginEndpoint: config.initiateLoginEndpoint!,
     clientId: config.clientId!,
   });
+
+  useEffect(() => {
+    async function doInitialize() {
+      try {
+        await app.initialize();
+        app.notifySuccess();
+      } catch (e) {
+        console.warn('failed app initialization, likely running outside Teams', e)
+      }
+    }
+
+    doInitialize();
+  }, [])
 
   return (
     <TeamsFxContext.Provider value={{ theme, themeString, teamsUserCredential }}>
