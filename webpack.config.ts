@@ -9,6 +9,13 @@ module.exports = {
   ],
   devServer: {
     static: './build',
+    client: {
+      webSocketURL: 'auto://0.0.0.0:0/ws',
+    },
+    allowedHosts: [
+      // Modify this if you use an alternate tunneling solution.
+      '.ngrok.io',
+    ]
   },
   resolve: {
     modules: [

@@ -1,60 +1,54 @@
-# Overview of the React with Fluent UI template
+# Mattermost Playbooks for Teams
 
-This app showcases how to craft a visually appealing web page that can be embedded in Microsoft Teams, Outlook and the Microsoft 365 app with React and Fluent UI. The app also enhances the end-user experiences with built-in single sign-on and data from Microsoft Graph.
+Mattermost Playbooks for Teams improves cross-organizational alignment and awareness by enabling access to your active Mattermost Playbook incidents and status updates directly in Microsoft Teams.
 
-This app has adopted [On-Behalf-Of flow](https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-on-behalf-of-flow) to implement SSO, and uses Azure Functions as middle-tier service, and make authenticated requests to call Graph from Azure Functions.
+See the [Mattermost Product Documentation](https://mattermost.com/pl/ms-teams-plugin-end-user-learn-more) for details on installing, configuring, enabling, and using this Mattermost integration. If you are a developer who wants to work on this plugin, visit the [Development](#development) section on this page
 
-## Get started with the React with Fluent UI template
+## Features
 
-> **Prerequisites**
->
-> To run the command bot template in your local dev machine, you will need:
->
-> - [Node.js](https://nodejs.org/), supported versions: 18, 20
-> - A [Microsoft 365 account for development](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts)
-> - [Set up your dev environment for extending Teams apps across Microsoft 365](https://aka.ms/teamsfx-m365-apps-prerequisites)
->   Please note that after you enrolled your developer tenant in Office 365 Target Release, it may take couple days for the enrollment to take effect.
-> - [Teams Toolkit Visual Studio Code Extension](https://aka.ms/teams-toolkit) version 5.0.0 and higher or [Teams Toolkit CLI](https://aka.ms/teamsfx-toolkit-cli)
+- Securely expose read-only access to Playbook runs for users inside Teams without requiring a Mattermost account.
+- Select which runs to expose by adding the `@msteams` bot as a Playbook run participant.
+- Restrict access to authenticated sers in a configured Microsoft 365 tenant.
 
-1. First, select the Teams Toolkit icon on the left in the VS Code toolbar.
-2. In the Account section, sign in with your [Microsoft 365 account](https://docs.microsoft.com/microsoftteams/platform/toolkit/accounts) if you haven't already.
-3. Press F5 to start debugging which launches your app in Teams using a web browser. Select `Debug in Teams (Edge)` or `Debug in Teams (Chrome)`.
-4. When Teams launches in the browser, select the Add button in the dialog to install your app to Teams.
+## License
 
-**Congratulations**! You are running an application that can now show a beautiful web page in Teams, Outlook and the Microsoft 365 app.
+This repository is licensed under the [Apache License v2.0](LICENSE).
 
-![Personal tab demo](https://github.com/OfficeDev/TeamsFx/assets/63089166/9599b53c-8f89-493f-9f7e-9edae1f9be54)
+## Development
 
-## What's included in the template
+This repository houses the single page application rendered inside Microsoft Teams. It works in tandem with [Mattermost Playbooks](https://github.com/mattermost/mattermost-plugin-playbooks), relying on cross-origin requests and [ID tokens](https://learn.microsoft.com/en-us/entra/identity-platform/id-tokens) to fetch and authenticate a user as from a particular Microsoft tenant.
 
-| Folder       | Contents                                                                                                               |
-| ------------ | ---------------------------------------------------------------------------------------------------------------------- |
-| `.vscode`    | VSCode files for debugging                                                                                             |
-| `appPackage` | Templates for the Teams application manifest                                                                           |
-| `env`        | Environment files                                                                                                      |
-| `infra`      | Templates for provisioning Azure resources                                                                             |
-| `src`        | The source code for the frontend of the Tab application. Implemented with Fluent UI Framework.                         |
-| `api`        | The source code for the backend of the Tab application. Implemented single-sign-on with OBO flow using Azure Functions. |
+![architecture diagram](./architecture.png)
 
-The following are Teams Toolkit specific project files. You can [visit a complete guide on Github](https://github.com/OfficeDev/TeamsFx/wiki/Teams-Toolkit-Visual-Studio-Code-v5-Guide#overview) to understand how Teams Toolkit works.
+### Setup
 
-| File                 | Contents                                                                                                                                                                                                                                                |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `teamsapp.yml`       | This is the main Teams Toolkit project file. The project file defines two primary things: Properties and configuration Stage definitions.                                                                                                               |
-| `teamsapp.local.yml` | This overrides `teamsapp.yml` with actions that enable local execution and debugging.                                                                                                                                                                   |
-| `aad.manifest.json`  | This file defines the configuration of Microsoft Entra app. This template will only provision [single tenant](https://learn.microsoft.com/azure/active-directory/develop/single-and-multi-tenant-apps#who-can-sign-in-to-your-app) Microsoft Entra app. |
+1. [Setup up your development environment](https://developers.mattermost.com/contribute/developer-setup/).
+2. Install the [Mattermost Playbooks](https://github.com/mattermost/mattermost-plugin-playbooks) plugin.
+3. Enable [developer mode](https://docs.mattermost.com/configure/developer-mode-configuration-settings.html#enable-developer-mode) to skip authentication and develop outside Microsoft Teams.
+4. Install NPM dependencies in this repository using `npm install`.
+5. Run this application in development mode using `npm run start`.
 
-## Extend the React with Fluent UI template
+This final step should open a webpack dev server, at which point you can connect to your instance on `https://localhost:8065`:
 
-Following documentation will help you to extend the React with Fluent UI template.
+![localhost setup](./localhost_setup.png)
 
-- [Add or manage the environment](https://learn.microsoft.com/microsoftteams/platform/toolkit/teamsfx-multi-env)
-- [Create multi-capability app](https://learn.microsoft.com/microsoftteams/platform/toolkit/add-capability)
-- [Use an existing Microsoft Entra application](https://learn.microsoft.com/microsoftteams/platform/toolkit/use-existing-aad-app)
-- [Customize the Teams app manifest](https://learn.microsoft.com/microsoftteams/platform/toolkit/teamsfx-preview-and-customize-app-manifest)
-- Host your app in Azure by [provision cloud resources](https://learn.microsoft.com/microsoftteams/platform/toolkit/provision) and [deploy the code to cloud](https://learn.microsoft.com/microsoftteams/platform/toolkit/deploy)
-- [Collaborate on app development](https://learn.microsoft.com/microsoftteams/platform/toolkit/teamsfx-collaboration)
-- [Set up the CI/CD pipeline](https://learn.microsoft.com/microsoftteams/platform/toolkit/use-cicd-template)
-- [Publish the app to your organization or the Microsoft Teams app store](https://learn.microsoft.com/microsoftteams/platform/toolkit/publish)
-- [Enable the app for multi-tenant](https://github.com/OfficeDev/TeamsFx/wiki/Multi-tenancy-Support-for-Azure-AD-app)
-- [Preview the app on mobile clients](https://github.com/OfficeDev/TeamsFx/wiki/Run-and-debug-your-Teams-application-on-iOS-or-Android-client)
+With developer mode and running outside Microsoft Teams, the normal authentication steps are skipped. For a more comprehensive development environment, proceed to setting up insiding Microsoft Teams.
+
+### Setup (inside Microsoft Teams)
+
+To fully test and develop inside the Microsoft Teams environment, it's necessary to provision and install a Microsoft Teams app. 
+
+1. Install the [Teams toolkit CLI](https://learn.microsoft.com/en-us/microsoftteams/platform/toolkit/teams-toolkit-cli): `npm install -g @microsoft/teamsapp-cli`.
+2. Provision the app: `teamsapp provision --env dev`.
+3. Modify the `TAB_ENDPOINT` and `TAB_DOMAIN` variables in [env/.env.dev](env/.env.dev) to point at your machine, e.g. exposed via an [Ngrok](https://ngrok.com/) tunnel. If you use an alternate tunnelling solution, you'll need to update [webpack.config.ts](./webpack.config.ts) to allow the corresponding host.
+
+```diff
+-TAB_ENDPOINT=https://playbooks.integrations.mattermost.com/
+-TAB_DOMAIN=playbooks.integrations.mattermost.com
++TAB_ENDPOINT=https://my-custom-host.ngrok.io/
++TAB_DOMAIN=my-custom-host.ngrok.io
+```
+4. Run `teamsapp preview --env dev` to load Teams pointing at your locally hosted version of the app.
+5. When prompted, click `Add` to temporarily add the application.
+
+This final step should load your webpack dev server inside the context of Teams, at which point you can connect to your instance on `https://localhost:8065` with authentication enabled, allowing you to optionally disable developer mode.

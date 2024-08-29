@@ -1,4 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { FetchError, fetchPlaybookRuns } from '../client';
 
@@ -12,8 +13,8 @@ import RunsSidebar from './Sidebar/Sidebar';
 import { makeStyles } from '@fluentui/react-components';
 
 import IncidentDetails from './IncidentDetails/IncidentDetails';
-
-import * as microsoftTeams from "@microsoft/teams-js";
+import NoRuns from './NoRuns';
+import { getAuthToken } from './auth';
 
 const useClasses = makeStyles({
   container: {
@@ -23,26 +24,15 @@ const useClasses = makeStyles({
   },
 });
 
-async function getAuthToken(): Promise<string> {
-  try {
-    await microsoftTeams.app.initialize();
-    const token = await microsoftTeams.authentication.getAuthToken()
-
-    return token;
-  } catch (e) {
-    console.warn(`Error from Teams SDK, may be running outside of Teams`, e);
-
-    return '';
-  }
-}
-
 export default function Tab() {
   const classes = useClasses();
+  const navigate = useNavigate();
   const { themeString } = useContext(TeamsFxContext);
   const [runs, setRuns] = useState<PlaybookRun[]>([]);
   const [users, setUsers] = useState<Record<string, LimitedUser>>({});
   const [posts, setPosts] = useState<Record<string, LimitedPost>>({});
   const [selectedRunId, setSelectedRunId] = useState<string>('');
+  const [loaded, setLoaded] = useState<boolean>(false);
 
   const selectedRun = runs.find((run) => run.id == selectedRunId);
 
@@ -59,12 +49,17 @@ export default function Tab() {
         if (results.items.length > 0) {
           setSelectedRunId(results.items[0].id);
         }
+
+        setLoaded(true);
       } catch (e) {
         if (e instanceof FetchError && e.status_code == 403) {
           console.error('The Teams Tab App is not enabled for this Mattermost instance. Contact your system administrator.');
         } else {
           console.error('An error occurred loading the playbooks runs', e);
         }
+
+        localStorage.setItem("mmcloudurl", "")
+        navigate('/setup', { state: { failed: true, url: mmURL } })
       }
     };
   };
@@ -72,6 +67,10 @@ export default function Tab() {
   useEffect(() => {
     getPlaybookRuns();
   }, []);
+
+  if (loaded && runs.length === 0) {
+    return <NoRuns />
+  }
 
   return (
     <div
