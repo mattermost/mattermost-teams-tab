@@ -112,7 +112,7 @@ export default function Setup() {
         }
         <p>
           Need help connecting to Mattermost? <br />
-          Learn more <a href="https://mattermost.com/pl/ms-teams-plugin-end-user-learn-more" target="_new">here</a>.
+          Learn more <a href="https://mattermost.com/pl/playbooks-for-microsoft-teams" target="_new">here</a>.
         </p>
       </form>
     </div>
