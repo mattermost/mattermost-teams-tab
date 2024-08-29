@@ -30,8 +30,12 @@ export default function App() {
 
   useEffect(() => {
     async function doInitialize() {
-      await app.initialize();
-      app.notifySuccess();
+      try {
+        await app.initialize();
+        app.notifySuccess();
+      } catch (e) {
+        console.warn('failed app initialization, likely running outside Teams', e)
+      }
     }
 
     doInitialize();
