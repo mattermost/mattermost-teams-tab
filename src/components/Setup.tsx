@@ -74,7 +74,9 @@ export default function Setup() {
     }
   }, [location.state])
 
-  const saveURL = () => {
+  const saveURL = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     const doSaveURL = async (url: string) => {
       if (!url.startsWith("https://") && !url.startsWith("http://")) {
         setErrorText("URL must start with 'https://`");
@@ -105,7 +107,7 @@ export default function Setup() {
           <input id="urlInput" style={styles.urlInput} value={url} onChange={(event) => setURL(event.target.value)} />
         </div>
         <div style={styles.saveContainer}>
-          <button style={styles.saveButton} onClick={saveURL}>Save</button>
+          <button style={styles.saveButton}>Save</button>
         </div>
         {errorText.length > 0 &&
           <label id="errorText" className="error">{errorText}</label>
