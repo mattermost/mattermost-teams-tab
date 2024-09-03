@@ -11,15 +11,12 @@ export class FetchError extends Error {
   }
 }
 
-export const validateServerURL = async (mattermostServerURL: string, authToken: string) => {
+export const validateServerURL = async (mattermostServerURL: string) => {
   try {
     let response = await fetch(
       `${mattermostServerURL}/plugins/playbooks/tabapp/runs`,
       {
-        method: 'OPTIONS',
-        headers: {
-          "Authorization": authToken,
-        },
+        method: 'OPTIONS'
       }
     );
 
