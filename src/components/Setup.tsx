@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import MattermostLogo from './mattermost_logo.svg';
-import { getAuthToken } from './auth';
 import { validateServerURL } from '../client';
 
 const styles = {
@@ -83,8 +82,7 @@ export default function Setup() {
         return
       }
 
-      const token = await getAuthToken()
-      const valid = await validateServerURL(url, token)
+      const valid = await validateServerURL(url)
       if (!valid) {
         setErrorText("This server does not appear to be configured for integration with MS Teams. Contact your system administrator.");
         return
