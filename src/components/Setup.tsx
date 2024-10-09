@@ -105,7 +105,7 @@ export default function Setup() {
           <input id="urlInput" style={styles.urlInput} value={url} onChange={(event) => setURL(event.target.value)} />
         </div>
         <div style={styles.saveContainer}>
-          <button style={styles.saveButton}>Save</button>
+          <button style={styles.saveButton}>Connect</button>
         </div>
         {errorText.length > 0 &&
           <label id="errorText" className="error">{errorText}</label>
