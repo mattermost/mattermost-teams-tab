@@ -1,5 +1,6 @@
 import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
 
 import path from 'path';
 
@@ -49,6 +50,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'Mattermost Playbooks for Teams',
       hash: true,
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'static' }
+      ]
     }),
   ],
   devtool: 'inline-source-map',
