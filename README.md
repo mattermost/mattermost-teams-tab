@@ -8,7 +8,7 @@ See the [Mattermost Product Documentation](https://mattermost.com/pl/ms-teams-pl
 
 - Securely expose read-only access to Playbook runs for users inside Teams without requiring a Mattermost account.
 - Select which runs to expose by adding the `@msteams` bot as a Playbook run participant.
-- Restrict access to authenticated sers in a configured Microsoft 365 tenant.
+- Restrict access to authenticated users in a configured Microsoft 365 tenant.
 
 ## License
 
